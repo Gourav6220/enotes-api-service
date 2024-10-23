@@ -32,16 +32,38 @@ public class CategorySaveImpl implements CategorySave {
 //		category.setName(categoryDto.getName());
 //		category.setDescription(categoryDto.getDescription());
 //		category.setIsActive(categoryDto.getIsActive());
+		
+		
 		Category category=mapper.map(categoryDto, Category.class);
-		category.setIsDeleted(false);
-		category.setCreatedBy(1);
-		category.setCreatedOn(new Date());
+		
+		if(ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			category.setCreatedBy(1);
+			category.setCreatedOn(new Date());
+			
+		}else {
+			updateCategory(category);
+		}
 		Category c=categoryRepository.save(category);
 if(ObjectUtils.isEmpty(c)) {
 	return false;
 	
 }
 		return true;
+	}
+
+	private void updateCategory(Category category) {
+		
+	Optional<Category> findbyid=categoryRepository.findById(category.getId());
+		if(findbyid.isPresent()) {
+	Category	exitcategory=findbyid.get();	
+	category.setCreatedBy(exitcategory.getCreatedBy());
+	category.setCreatedOn(exitcategory.getCreatedOn());
+	category.setIsDeleted(exitcategory.getIsDeleted());
+	category.setUpdatedBy(1);
+	category.setUpdatedOn(new Date());
+		}
+		
 	}
 
 	@Override
