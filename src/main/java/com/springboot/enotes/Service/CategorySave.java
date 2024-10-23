@@ -12,5 +12,9 @@ public interface CategorySave {
 	public List<CategoryDto> getAllCategory();
 
 	public List<CategoryResponse> getActiveCategory();
+
+	public CategoryDto  getCategoryByid(Integer id);
+
+	public Boolean deleteCategoryByid(Integer id);
 	
 }

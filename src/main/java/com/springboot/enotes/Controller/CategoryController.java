@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +38,7 @@ public class CategoryController {
 		
 	}
 	}
-	@GetMapping("/category")
+	@GetMapping("/")
 	public ResponseEntity<?> getAllCategory(){
 		
 		List<CategoryDto> allcategory=categorySave.getAllCategory();
@@ -46,7 +49,7 @@ public class CategoryController {
 	}
 	
 	}
-	@GetMapping("/active-category")
+	@GetMapping("/active")
 	public ResponseEntity<?> getAllActiveCategory(){
 		
 		List<CategoryResponse> allcategory=categorySave.getActiveCategory();
@@ -58,6 +61,28 @@ public class CategoryController {
 		}
 		
 	}
+	@GetMapping("{id}")
+	public ResponseEntity<?> getCategorybyid(@PathVariable Integer id){
+		CategoryDto categorydro=categorySave.getCategoryByid(id);
+		
+		if(ObjectUtils.isEmpty(categorydro)) {
+			return new ResponseEntity<>("category not found with id: "+id,HttpStatus.NOT_FOUND);
+				}else {
+			return new ResponseEntity<>(categorydro,HttpStatus.OK);
+		}
+	}
+	
+	@DeleteMapping("{id}")
+	public ResponseEntity<?> getCategorydelete(@PathVariable Integer id){
+		Boolean categorydelete=categorySave.deleteCategoryByid(id);
+		
+		if(categorydelete) {
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>("category not found with id: "+id,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	
 	
 }
