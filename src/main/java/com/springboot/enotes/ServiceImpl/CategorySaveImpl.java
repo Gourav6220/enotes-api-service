@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.CategoryResponse;
 import com.springboot.enotes.Entity.Category;
+import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Repository.CategoryRepository;
 import com.springboot.enotes.Service.CategorySave;
 
@@ -86,12 +87,17 @@ if(ObjectUtils.isEmpty(c)) {
 	}
 
 	@Override
-	public CategoryDto getCategoryByid(Integer id) {
+	public CategoryDto getCategoryByid(Integer id) throws Exception {
 
-	Optional<Category> categorbyid=categoryRepository.findByIdAndIsDeletedFalse(id);
+	Category category=categoryRepository.findByIdAndIsDeletedFalse(id)
+			.orElseThrow(()-> new ResourceNotFoundException("Category Not Found"));
 	
-	if(categorbyid.isPresent()) {
-	Category category=categorbyid.get();
+	if(category.getName()==null) {
+throw new IllegalArgumentException("name is null");		
+	}
+//	category.getName().substring(1);
+	
+	if(!ObjectUtils.isEmpty(category)) {
 	return mapper.map(category, CategoryDto.class);
 	}
 	

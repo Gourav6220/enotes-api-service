@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.CategoryResponse;
+import com.springboot.enotes.Exception.ResourceNotFoundException;
 
 public interface CategorySave {
 
@@ -13,7 +14,7 @@ public interface CategorySave {
 
 	public List<CategoryResponse> getActiveCategory();
 
-	public CategoryDto  getCategoryByid(Integer id);
+	public CategoryDto  getCategoryByid(Integer id) throws Exception;
 
 	public Boolean deleteCategoryByid(Integer id);
 	
