@@ -25,9 +25,17 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ExceptionHandler(ValidException.class)
+	public ResponseEntity<?> handleValidException(ValidException ex){
+		return new ResponseEntity<>(ex.getError(),HttpStatus.BAD_REQUEST);
+	}
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception ex){
 		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex){
+		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

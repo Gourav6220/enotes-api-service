@@ -21,17 +21,17 @@ public class CategoryDto {
 
 	private Integer id;
 	
-	@NotBlank
-	@Min(value = 10,message = "Name Should not be null")
-	@Max(value = 100)
+//	@NotBlank
+//	@Min(value = 10,message = "Name Should not be null")
+//	@Max(value = 100)
 	private String name;
 	
-	@NotBlank
-	@Min(value = 10,message = "Name Should not be null")
-	@Max(value = 100)
+//	@NotBlank
+//	@Min(value = 10,message = "Name Should not be null")
+//	@Max(value = 100)
 	private String description;
 	
-	@NotNull
+//	@NotNull
 	private Boolean isActive;
 	
 	private Boolean isDeleted;
