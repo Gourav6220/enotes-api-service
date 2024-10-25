@@ -21,6 +21,8 @@ import com.springboot.enotes.Entity.Category;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Service.CategorySave;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/vi/category")
 public class CategoryController {
@@ -29,7 +31,7 @@ public class CategoryController {
 	private CategorySave categorySave;
 	
 	@PostMapping("/save-category")
-	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category){
+	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category){
 	Boolean saveCategory=categorySave.saveCategory(category);
 	if(saveCategory) {
 		return new ResponseEntity<>("Successfully Saved",HttpStatus.CREATED);
