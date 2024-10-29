@@ -26,8 +26,8 @@ public class CustomValidation {
 				error.put("Name", "Name is not null");
 			}else {
 				
-				if(categoryDto.getName().length()<10) {
-					error.put("Name", "Name length should be minimum 10");
+				if(categoryDto.getName().length()<3) {
+					error.put("Name", "Name length should be minimum 3");
 				}
 				if(categoryDto.getName().length()>100) {
 					error.put("Name", "Name length should maximun 100");

@@ -46,8 +46,8 @@ public class CategorySaveImpl implements CategorySave {
 				throw new IllegalArgumentException("Category Name Exist In our database");
 			}else {
 				category.setIsDeleted(false);
-				category.setCreatedBy(1);
-				category.setCreatedOn(new Date());
+//				category.setCreatedBy(1);
+//				category.setCreatedOn(new Date());
 				Category c=categoryRepository.save(category);
 				if(ObjectUtils.isEmpty(c)) {
 					return false;
@@ -77,8 +77,8 @@ public class CategorySaveImpl implements CategorySave {
 	category.setCreatedBy(exitcategory.getCreatedBy());
 	category.setCreatedOn(exitcategory.getCreatedOn());
 	category.setIsDeleted(exitcategory.getIsDeleted());
-	category.setUpdatedBy(1);
-	category.setUpdatedOn(new Date());
+//	category.setUpdatedBy(1);
+//	category.setUpdatedOn(new Date());
 		}
 		
 	}
