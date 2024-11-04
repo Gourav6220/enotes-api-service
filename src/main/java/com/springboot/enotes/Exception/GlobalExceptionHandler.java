@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.springboot.enotes.util.CommonUtil;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -22,20 +24,26 @@ public class GlobalExceptionHandler {
 //	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception ex){
-		return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	@ExceptionHandler(ValidException.class)
 	public ResponseEntity<?> handleValidException(ValidException ex){
-		return new ResponseEntity<>(ex.getError(),HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(ex.getError(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(ex.getError(), HttpStatus.BAD_REQUEST);
+
 	}
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception ex){
-		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex){
-		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,7 +58,8 @@ public class GlobalExceptionHandler {
 		});
 		
 		
-		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	

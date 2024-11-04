@@ -20,6 +20,7 @@ import com.springboot.enotes.Dto.CategoryResponse;
 import com.springboot.enotes.Entity.Category;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Service.CategorySave;
+import com.springboot.enotes.util.CommonUtil;
 
 import jakarta.validation.Valid;
 
@@ -35,10 +36,12 @@ public class CategoryController {
 		public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category){
 	Boolean saveCategory=categorySave.saveCategory(category);
 	if(saveCategory) {
-		return new ResponseEntity<>("Successfully Saved",HttpStatus.CREATED);
+		return CommonUtil.createBuildResponseMessage("SuccessFully Saved", HttpStatus.CREATED);
+		//return new ResponseEntity<>("Successfully Saved",HttpStatus.CREATED);
 			
 	}else {
-		return new ResponseEntity<>("not saved",HttpStatus.INTERNAL_SERVER_ERROR);
+		//return new ResponseEntity<>("not saved",HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage("Not Saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
 	}
@@ -49,8 +52,9 @@ public class CategoryController {
 	if(CollectionUtils.isEmpty(allcategory)) {
 		return  ResponseEntity.noContent().build();
 	}else {
-		return new ResponseEntity<>(allcategory,HttpStatus.OK);
-	}
+//		return new ResponseEntity<>(allcategory,HttpStatus.OK);
+		return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
+		}
 	
 	}
 	@GetMapping("/active")
@@ -61,7 +65,9 @@ public class CategoryController {
 		if(CollectionUtils.isEmpty(allcategory)) {
 			return  ResponseEntity.noContent().build();
 		}else {
-			return new ResponseEntity<>(allcategory,HttpStatus.OK);
+//			return new ResponseEntity<>(allcategory,HttpStatus.OK);
+			return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
+
 		}
 		
 	}
@@ -70,9 +76,13 @@ public class CategoryController {
 		CategoryDto categorydro=categorySave.getCategoryByid(id);
 		
 		if(ObjectUtils.isEmpty(categorydro)) {
-			return new ResponseEntity<>("Internal Server Error"+id,HttpStatus.NOT_FOUND);
-				}else {
-			return new ResponseEntity<>(categorydro,HttpStatus.OK);
+//			return new ResponseEntity<>("Internal Server Error"+id,HttpStatus.NOT_FOUND);
+			return CommonUtil.createErrorResponseMessage("Internal Server Error"+id, HttpStatus.NOT_FOUND);
+		
+		}else {
+//			return new ResponseEntity<>(categorydro,HttpStatus.OK);
+			return CommonUtil.createBuildResponse(categorydro, HttpStatus.OK);
+
 		}
 	}
 	
@@ -81,9 +91,13 @@ public class CategoryController {
 		Boolean categorydelete=categorySave.deleteCategoryByid(id);
 		
 		if(categorydelete) {
-			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+//			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+			return CommonUtil.createBuildResponseMessage("Deleted Successfully", HttpStatus.OK);
+
 		}else {
-			return new ResponseEntity<>("category not found with id: "+id,HttpStatus.INTERNAL_SERVER_ERROR);
+//			return new ResponseEntity<>("category not found with id: "+id,HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("category not found with id: "+id, HttpStatus.INTERNAL_SERVER_ERROR);
+			
 		}
 	}
 	
