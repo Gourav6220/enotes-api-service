@@ -32,7 +32,7 @@ public class GenericResponse {
 		
 		Map<String,Object> map=new LinkedHashMap<>();
 		map.put("status", status);		
-		map.put("message", message);		
+		map.put("message", message);		 
 		if(!ObjectUtils.isEmpty(data)) {
 			map.put("data", data);		
 					
