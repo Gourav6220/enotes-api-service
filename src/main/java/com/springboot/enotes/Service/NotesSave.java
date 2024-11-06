@@ -5,11 +5,16 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.enotes.Dto.NotesDto;
+import com.springboot.enotes.Entity.FileDetails;
+import com.springboot.enotes.Exception.ResourceNotFoundException;
 
 public interface NotesSave {
 
 	public boolean saveNotes(String notes,MultipartFile file) throws Exception;
 	
 	public List<NotesDto> getAllNotes();
-	
+
+	public FileDetails getfiledetails(Integer id) throws Exception ;
+
+	public byte[] downloadFile(FileDetails filedtls) throws Exception; 
 }

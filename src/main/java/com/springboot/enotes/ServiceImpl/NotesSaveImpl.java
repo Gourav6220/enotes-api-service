@@ -1,12 +1,18 @@
 package com.springboot.enotes.ServiceImpl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import javax.print.DocFlavor.INPUT_STREAM;
 
 import org.apache.catalina.mapper.Mapper;
 import org.apache.commons.io.FilenameUtils;
@@ -15,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -143,6 +150,23 @@ if(ObjectUtils.isEmpty(n)) {
 		
 		return dtonotes;
 
+	}
+
+	
+	public byte[] downloadFile(FileDetails filedtls) throws Exception {
+		
+		InputStream io=new FileInputStream(filedtls.getPath());
+		
+		return  StreamUtils.copyToByteArray(io);
+	}
+	
+	
+	@Override
+	public FileDetails getfiledetails(Integer id) throws Exception {
+
+	FileDetails filedtls=fileRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("File is not available"));
+		
+	return filedtls;
 	}
 	
 	

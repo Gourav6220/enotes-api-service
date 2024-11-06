@@ -3,12 +3,15 @@ package com.springboot.enotes.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.enotes.Dto.NotesDto;
+import com.springboot.enotes.Entity.FileDetails;
 import com.springboot.enotes.Service.NotesSave;
 import com.springboot.enotes.util.CommonUtil;
 
@@ -37,6 +41,25 @@ public class NotesController {
 		}else {
 			return CommonUtil.createErrorResponseMessage("Not Saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+	}
+	
+	@GetMapping("/download/{id}")
+
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
+		
+		FileDetails filedtls=notesSave.getfiledetails(id);
+		
+		byte[] data=notesSave.downloadFile(filedtls);
+
+		HttpHeaders headers=new HttpHeaders();
+	
+		String getfileextension=CommonUtil.getContenttype(filedtls.getOriginalFileName());
+		
+		headers.setContentType(MediaType.parseMediaType(getfileextension));
+		headers.setContentDispositionFormData("attachment", filedtls.getOriginalFileName());
+		
+		return ResponseEntity.ok().headers(headers).body(data);
 		
 	}
 	

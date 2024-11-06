@@ -1,5 +1,6 @@
 package com.springboot.enotes.Exception;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
 	}
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex){
+//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException ex){
 //		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
