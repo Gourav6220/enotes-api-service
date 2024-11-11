@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.enotes.Dto.NotesDto;
+import com.springboot.enotes.Dto.NotesResponse;
 import com.springboot.enotes.Entity.FileDetails;
 import com.springboot.enotes.Service.NotesSave;
 import com.springboot.enotes.util.CommonUtil;
@@ -65,6 +66,7 @@ public class NotesController {
 	
 	@GetMapping("/")
 	public ResponseEntity<?> getAllNotes(){
+		
 		List<NotesDto> notesDto=notesSave.getAllNotes();
 		if(!CollectionUtils.isEmpty(notesDto)) {
 			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
@@ -73,7 +75,24 @@ public class NotesController {
 }
 		
 	}
+
 	
+	@GetMapping("/user-notes")
+	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+	){
+		
+		Integer userid=1;
+		NotesResponse notesDto=notesSave.getAllNotesByUser(userid,pageNo,pageSize);
+//		if(!CollectionUtils.isEmpty(notesDto)) {
+//			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+//		}
+			
+			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+
+
+		
+	}
 	
 	
 }

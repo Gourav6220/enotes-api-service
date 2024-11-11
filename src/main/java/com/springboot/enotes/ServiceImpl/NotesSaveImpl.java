@@ -19,6 +19,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.enotes.Dto.NotesDto;
 import com.springboot.enotes.Dto.NotesDto.CategoryDto;
+import com.springboot.enotes.Dto.NotesResponse;
 import com.springboot.enotes.Entity.FileDetails;
 import com.springboot.enotes.Entity.Notes;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
@@ -167,6 +171,30 @@ if(ObjectUtils.isEmpty(n)) {
 	FileDetails filedtls=fileRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("File is not available"));
 		
 	return filedtls;
+	}
+
+	@Override
+	public NotesResponse getAllNotesByUser(Integer userid,Integer pageNo, Integer pageSize) {
+	
+		Pageable pageable=PageRequest.of(pageNo, pageSize);
+		
+		Page<Notes> pagenotes=notesRespository.findByCreatedBy(userid,pageable);
+		
+		List<NotesDto> notes=pagenotes.get().map(p->mapper.map(p, NotesDto.class)).toList();
+
+		
+		
+		NotesResponse noteresponse=NotesResponse.builder()
+				.notes(notes)
+				.pageNo(pagenotes.getNumber())
+				.pageSize(pagenotes.getSize())
+				.totalElement(pagenotes.getTotalElements())
+				.totalPages(pagenotes.getTotalPages())
+				.isFirst(pagenotes.isFirst())
+				.isLast(pagenotes.isLast())
+				.build();
+		
+		return noteresponse;
 	}
 	
 	
