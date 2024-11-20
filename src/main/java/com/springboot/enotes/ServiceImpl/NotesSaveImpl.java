@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.enotes.Dto.NotesDto;
 import com.springboot.enotes.Dto.NotesDto.CategoryDto;
+import com.springboot.enotes.Dto.NotesDto.FileDto;
 import com.springboot.enotes.Dto.NotesResponse;
 import com.springboot.enotes.Entity.FileDetails;
 import com.springboot.enotes.Entity.Notes;
@@ -64,6 +65,12 @@ public class NotesSaveImpl implements NotesSave {
 		NotesDto notesdto= ob.readValue(notes,NotesDto.class);
 	
 		
+		if(!ObjectUtils.isEmpty(notesdto.getId())) {
+			updateNotes(notesdto,file);
+			
+			
+		}
+		
 		checkcategoryExist(notesdto.getCategory());
 
 		Notes savenotes=mapper.map(notesdto, Notes.class);
@@ -72,7 +79,9 @@ public class NotesSaveImpl implements NotesSave {
 		if(!ObjectUtils.isEmpty(filedlts)) {
 			savenotes.setFileDetails(filedlts);
 		}else {
-			savenotes.setFileDetails(null);
+			if(ObjectUtils.isEmpty(notesdto.getId())) {
+				savenotes.setFileDetails(null);
+						}			
 		}
 		
 	Notes n=notesRespository.save(savenotes);
@@ -80,6 +89,17 @@ if(ObjectUtils.isEmpty(n)) {
 	return false;
 }
 		return true;
+	}
+
+	private void updateNotes(NotesDto notesdto, MultipartFile file) throws ResourceNotFoundException {
+
+		Notes notesupdate= notesRespository.findById(notesdto.getId()).orElseThrow(()-> new ResourceNotFoundException("Id is not valid"));
+
+if(ObjectUtils.isEmpty(file)) {
+	notesdto.setFileDetails(mapper.map(notesupdate.getFileDetails(), FileDto.class));
+}
+		
+		
 	}
 
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
