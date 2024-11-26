@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,19 +81,26 @@ public class NotesController {
 	@GetMapping("/user-notes")
 	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
 			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
-	){
+	)
+	{
 		
 		Integer userid=1;
 		NotesResponse notesDto=notesSave.getAllNotesByUser(userid,pageNo,pageSize);
-//		if(!CollectionUtils.isEmpty(notesDto)) {
-//			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
-//		}
-			
 			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
-
-
-		
 	}
 	
+@GetMapping("/delete/{id}")
+public ResponseEntity<?> getDeleteNotesById(@PathVariable Integer id) throws Exception{
+ notesSave.deleteNotesByid(id);
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
+@GetMapping("/restore/{id}")
+public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
+	notesSave.restoreNotes(id);
+	return CommonUtil.createBuildResponseMessage("Notes restore Successfully", HttpStatus.OK);
+}
 	
+
+
+
 }

@@ -19,5 +19,10 @@ public interface NotesSave {
 
 	public byte[] downloadFile(FileDetails filedtls) throws Exception;
 
-	public NotesResponse getAllNotesByUser(Integer userid, Integer pageNo, Integer pageSize); 
+	public NotesResponse getAllNotesByUser(Integer userid, Integer pageNo, Integer pageSize);
+
+	public void deleteNotesByid(Integer id) throws Exception;
+
+	public void restoreNotes(Integer id) throws Exception; 
+	
 }

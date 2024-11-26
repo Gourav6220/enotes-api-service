@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -215,6 +217,26 @@ if(ObjectUtils.isEmpty(file)) {
 				.build();
 		
 		return noteresponse;
+	}
+
+	@Override
+	public void  deleteNotesByid(Integer id) throws Exception {
+Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
+	
+		getnotes.setIsDeleted(true);
+		getnotes.setDeletedOn(new Date());
+		getnotes.setUpdatedOn(getnotes.getUpdatedOn());
+		
+		notesRespository.save(getnotes);
+	}
+	@Override
+	public void  restoreNotes(Integer id) throws Exception {
+		Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
+		
+		getnotes.setIsDeleted(false);
+		getnotes.setDeletedOn(null);
+		getnotes.setUpdatedOn(getnotes.getUpdatedOn());
+		notesRespository.save(getnotes);
 	}
 	
 	
