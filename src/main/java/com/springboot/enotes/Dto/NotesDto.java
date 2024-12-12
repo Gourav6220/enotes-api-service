@@ -1,5 +1,6 @@
 package com.springboot.enotes.Dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.springboot.enotes.Entity.Category;
@@ -35,6 +36,10 @@ public class NotesDto {
 	
 	private FileDto fileDetails;
 	
+	private Boolean isDeleted;
+
+	private LocalDateTime deletedOn;
+
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Getter

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +67,8 @@ public class NotesSaveImpl implements NotesSave {
 	
 		ObjectMapper ob=new ObjectMapper();
 		NotesDto notesdto= ob.readValue(notes,NotesDto.class);
-	
+		notesdto.setIsDeleted(false);
+		notesdto.setDeletedOn(null);
 		
 		if(!ObjectUtils.isEmpty(notesdto.getId())) {
 			updateNotes(notesdto,file);
@@ -200,7 +203,7 @@ if(ObjectUtils.isEmpty(file)) {
 	
 		Pageable pageable=PageRequest.of(pageNo, pageSize);
 		
-		Page<Notes> pagenotes=notesRespository.findByCreatedBy(userid,pageable);
+		Page<Notes> pagenotes=notesRespository.findByCreatedByAndIsDeletedFalse(userid,pageable);
 		
 		List<NotesDto> notes=pagenotes.get().map(p->mapper.map(p, NotesDto.class)).toList();
 
@@ -224,7 +227,7 @@ if(ObjectUtils.isEmpty(file)) {
 Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
 	
 		getnotes.setIsDeleted(true);
-		getnotes.setDeletedOn(new Date());
+		getnotes.setDeletedOn(LocalDateTime.now());
 		getnotes.setUpdatedOn(getnotes.getUpdatedOn());
 		
 		notesRespository.save(getnotes);
@@ -237,6 +240,37 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 		getnotes.setDeletedOn(null);
 		getnotes.setUpdatedOn(getnotes.getUpdatedOn());
 		notesRespository.save(getnotes);
+	}
+
+	@Override
+	public List<NotesDto> getUserRecycleBinNotes(Integer userid) {
+	
+		List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
+		
+		List<NotesDto> notesdto=getnotes.stream().map(note-> mapper.map(note, NotesDto.class)).toList();
+		
+		return notesdto;
+	}
+
+	@Override
+	public void hardDeleteNotesByid(Integer id) throws Exception {
+		Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
+		if(getnotes.getIsDeleted()) {
+			notesRespository.delete(getnotes);
+		}else {
+			throw new Exception("You Cannot Delete Notes Directly");
+		}
+		
+	}
+
+	@Override
+	public void userEmptyRecyclebin(Integer userid) {
+		List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
+		if(!CollectionUtils.isEmpty(getnotes)) {
+			notesRespository.deleteAll(getnotes);
+		}
+		
+		
 	}
 	
 	

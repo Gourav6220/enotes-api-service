@@ -23,6 +23,12 @@ public interface NotesSave {
 
 	public void deleteNotesByid(Integer id) throws Exception;
 
-	public void restoreNotes(Integer id) throws Exception; 
+	public void restoreNotes(Integer id) throws Exception;
+
+	public List<NotesDto> getUserRecycleBinNotes(Integer userid);
+
+	public void hardDeleteNotesByid(Integer id) throws Exception;
+
+	public void userEmptyRecyclebin(Integer userid); 
 	
 }

@@ -100,7 +100,28 @@ public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception
 	return CommonUtil.createBuildResponseMessage("Notes restore Successfully", HttpStatus.OK);
 }
 	
+@GetMapping("/recycle-bin")
+public ResponseEntity<?> getUserNotesRecycleBinNotes() throws Exception{
+	Integer userid=1;
+	List<NotesDto> notes=notesSave.getUserRecycleBinNotes(userid);
+if(CollectionUtils.isEmpty(notes)) {
+	return CommonUtil.createBuildResponseMessage("Notes Not Found In Recycle bin", HttpStatus.OK);	
+}
+	return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+}
 
+@DeleteMapping("/delete/{id}")
+public ResponseEntity<?> hardDeleteNotesById(@PathVariable Integer id) throws Exception{
+ notesSave.hardDeleteNotesByid(id);
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
+
+@DeleteMapping("/delete")
+public ResponseEntity<?> emptyRecycleBin() {
+Integer userid=1;
+	notesSave.userEmptyRecyclebin(userid);
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
 
 
 }

@@ -1,5 +1,6 @@
 package com.springboot.enotes.Entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -39,6 +40,6 @@ public class Notes extends baseModel {
 
 	private Boolean isDeleted;
 
-	private Date deletedOn;
+	private LocalDateTime deletedOn;
 	
 }

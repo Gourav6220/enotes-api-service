@@ -18,10 +18,11 @@ import com.springboot.enotes.util.CommonUtil;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//	@ExceptionHandler(Exception.class)
-//	public ResponseEntity<?> handleException(Exception ex){
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> handleException(Exception ex){
 //		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
-//	}
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 //	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception ex){
