@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.springboot.enotes.Dto.FavouriteNotesDto;
 import com.springboot.enotes.Dto.NotesDto;
 import com.springboot.enotes.Dto.NotesResponse;
 import com.springboot.enotes.Entity.FileDetails;
@@ -122,6 +123,32 @@ Integer userid=1;
 	notesSave.userEmptyRecyclebin(userid);
  return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
 }
+
+@GetMapping("/fav/{notesId}")
+public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesid) throws Exception {
+	notesSave.favouriteNotes(notesid);
+	return CommonUtil.createBuildResponseMessage("Notes added favourite", HttpStatus.CREATED);
+}
+
+@GetMapping("/un-fav/{favnotesId}")
+public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favid) throws Exception {
+	notesSave.unFavouriteNotes(favid);
+	return CommonUtil.createBuildResponseMessage("Remove favourite", HttpStatus.OK);
+}
+
+
+@GetMapping("/fav-notes")
+public ResponseEntity<?> getFavouritesnotesbyuser() {
+Integer userid=1;
+List<FavouriteNotesDto> favnoteslist=	notesSave.GetUserFavouriteNotes(userid);
+if(!CollectionUtils.isEmpty(favnoteslist)) {
+	 return CommonUtil.createBuildResponse(favnoteslist, HttpStatus.OK);
+}
+return CommonUtil.createBuildResponseMessage("Favourite Notes Not Found", HttpStatus.NO_CONTENT);
+
+}
+
+
 
 
 }
