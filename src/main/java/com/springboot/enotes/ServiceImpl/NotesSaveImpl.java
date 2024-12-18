@@ -281,7 +281,7 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 
 	@Override
 	public void favouriteNotes(Integer notesid) throws Exception {
-	 int userid=2;
+	 int userid=1;
 		Notes note=	notesRespository.findById(notesid).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
 		FavouriteNote favouriteNote=FavouriteNote.builder()
 				.userId(userid)
@@ -300,7 +300,7 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 
 	@Override
 	public List<FavouriteNotesDto> GetUserFavouriteNotes(Integer userId) {
-		 int userid=2;
+		 int userid=1;
 		 List<FavouriteNote> favouriteNotes= favouriteNoteRepository.findByUserId(userid);
 		return favouriteNotes.stream().map(fn-> mapper.map(fn,FavouriteNotesDto.class)).toList();
 	

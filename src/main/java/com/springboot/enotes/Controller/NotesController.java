@@ -125,14 +125,14 @@ Integer userid=1;
 }
 
 @GetMapping("/fav/{notesId}")
-public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesid) throws Exception {
-	notesSave.favouriteNotes(notesid);
+public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesId) throws Exception {
+	notesSave.favouriteNotes(notesId);
 	return CommonUtil.createBuildResponseMessage("Notes added favourite", HttpStatus.CREATED);
 }
 
 @GetMapping("/un-fav/{favnotesId}")
-public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favid) throws Exception {
-	notesSave.unFavouriteNotes(favid);
+public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favnotesId) throws Exception {
+	notesSave.unFavouriteNotes(favnotesId);
 	return CommonUtil.createBuildResponseMessage("Remove favourite", HttpStatus.OK);
 }
 
