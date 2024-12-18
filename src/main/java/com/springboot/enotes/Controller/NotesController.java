@@ -148,6 +148,17 @@ return CommonUtil.createBuildResponseMessage("Favourite Notes Not Found", HttpSt
 
 }
 
+@GetMapping("/copy-notes/{notesId}")
+public ResponseEntity<?> copynotesbyuser(@PathVariable Integer notesId) throws Exception {
+boolean notescopysave=notesSave.copyNotes(notesId);
+if(notescopysave) {
+	return CommonUtil.createBuildResponseMessage("Notes Copied successfully", HttpStatus.CREATED);
+}else {
+	return CommonUtil.createBuildResponseMessage("Notes Copied Failed", HttpStatus.INTERNAL_SERVER_ERROR);
+	
+}
+
+}
 
 
 

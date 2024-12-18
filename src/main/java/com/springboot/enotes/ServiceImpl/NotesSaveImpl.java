@@ -305,6 +305,26 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 		return favouriteNotes.stream().map(fn-> mapper.map(fn,FavouriteNotesDto.class)).toList();
 	
 	}
+
+	@Override
+	public boolean copyNotes(Integer notesId) throws Exception {
+		
+	Notes copynotes=notesRespository.findById(notesId).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid !!not found"));
+	
+	Notes newnotes=Notes.builder()
+			.title(copynotes.getTitle())
+			.description(copynotes.getDescription())
+			.category(copynotes.getCategory())
+			.isDeleted(false)
+			.deletedOn(null)
+			.fileDetails(null)
+			.build();
+			Notes saveCopyNote=notesRespository.save(newnotes);
+		if(!ObjectUtils.isEmpty(saveCopyNote)) {
+			return true;
+		}
+		return false;
+	}
 	
 	
 	
