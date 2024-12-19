@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.springboot.enotes.Dto.CategoryDto;
+import com.springboot.enotes.Dto.TodoDto;
+import com.springboot.enotes.Dto.TodoDto.StatusDto;
+import com.springboot.enotes.Enums.TodoStatus;
+import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Exception.ValidException;
 
 import jakarta.validation.ValidationException;
@@ -65,6 +69,23 @@ public class CustomValidation {
 		
 		
 	}
+	
+	public void todoValidation(TodoDto todo) throws Exception{
+		StatusDto reqStatus=todo.getStatus();
+		Boolean statusFound=false;
+		for(TodoStatus st:TodoStatus.values()) {
+			if(st.getId().equals(reqStatus.getId())) {
+				statusFound=true;	
+			}
+		}
+	
+	if(!statusFound) {
+		throw new ResourceNotFoundException("invalid status");
+		
+	}
+	}
+	
+	
 	
 	
 }
