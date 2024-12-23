@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException ex){
 //		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
-		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(FileNotFoundException.class)

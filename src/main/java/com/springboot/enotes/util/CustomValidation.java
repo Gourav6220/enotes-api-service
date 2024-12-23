@@ -16,6 +16,7 @@ import com.springboot.enotes.Dto.TodoDto.StatusDto;
 import com.springboot.enotes.Dto.UserDto;
 import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Enums.TodoStatus;
+import com.springboot.enotes.Exception.ExistDataException;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Exception.ValidException;
 import com.springboot.enotes.Repository.RoleRepository;
@@ -102,7 +103,6 @@ private UserRepository userRepo;
 	
 	public void userValidation(UserDto userdto) {
 	
-		Map<String,Object> error=new LinkedHashMap<>();
 
 		if(!StringUtils.hasText(userdto.getFirstName())) {
 			throw new IllegalArgumentException("first name is invalid!!!");
@@ -114,6 +114,12 @@ private UserRepository userRepo;
 
 		if(!StringUtils.hasText(userdto.getEmail()) || ! userdto.getEmail().matches(Constants.EMAIL_REGEX) ) {
 			throw new IllegalArgumentException("email is invalid!!!");
+		}
+		else {
+		User useexist=userRepo.findByEmail(userdto.getEmail());
+			if(!ObjectUtils.isEmpty(useexist)) {
+				throw new ExistDataException("This Email already exist");
+			}
 		}
 		if(!StringUtils.hasText(userdto.getMobNo()) || ! userdto.getMobNo().matches(Constants.MOBILE_REGEX) ) {
 			throw new IllegalArgumentException("Mobile Number is invalid!!!");
