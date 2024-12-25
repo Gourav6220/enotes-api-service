@@ -22,7 +22,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/register-user")
-	public ResponseEntity<?> saveUserDetails(@RequestBody UserDto userDto){
+	public ResponseEntity<?> saveUserDetails(@RequestBody UserDto userDto) throws Exception{
 		Boolean usersaveornot=userService.register(userDto);
 		if(usersaveornot) {
 			return CommonUtil.createBuildResponseMessage("User Register Successfully", HttpStatus.CREATED);
