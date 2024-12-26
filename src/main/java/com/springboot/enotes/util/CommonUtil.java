@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import com.springboot.enotes.Entity.FileDetails;
 import com.springboot.enotes.Handler.GenericResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class CommonUtil {
 
 	public static ResponseEntity<?> createBuildResponse(Object data,HttpStatus status){
@@ -74,6 +76,15 @@ return response.create();
 		}
 		
 		
+	}
+	public static String geturl(HttpServletRequest request) {
+
+	String getscheme=request.getScheme();//request.getScheme(): Retrieves the scheme (http or https)
+	String gethostname=request.getServerName();//request.getServerName(): Retrieves local host or ip that server 
+	int getport= request.getServerPort();//request.getServerPort(): Retrieves port number on that server 
+	
+	return getscheme+"://"+gethostname+":"+getport;
+	
 	}
 	
 }

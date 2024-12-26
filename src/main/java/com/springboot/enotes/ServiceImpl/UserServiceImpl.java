@@ -2,6 +2,7 @@ package com.springboot.enotes.ServiceImpl;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.springboot.enotes.Dto.EmailRequest;
 import com.springboot.enotes.Dto.UserDto;
+import com.springboot.enotes.Entity.AccountStatus;
 import com.springboot.enotes.Entity.Role;
 import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Repository.RoleRepository;
@@ -17,6 +19,8 @@ import com.springboot.enotes.Repository.UserRepository;
 import com.springboot.enotes.Service.UserService;
 import com.springboot.enotes.util.CustomValidation;
 import com.springboot.enotes.util.EmailService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,16 +43,18 @@ public class UserServiceImpl implements UserService {
 	
 
 	@Override
-	public Boolean register(UserDto userDto) throws Exception {
+	public Boolean register(UserDto userDto,String url) throws Exception {
 
 	validation.userValidation(userDto);
 		
 	User user=mapper.map(userDto, User.class);
 	
 	setRole(userDto,user);
+	AccountStatus acstatus=AccountStatus.builder().isActive(false).verificationCode(UUID.randomUUID().toString()).build();
+	user.setStatus(acstatus);
 	User Saveuser=userRepo.save(user);
 	if(!ObjectUtils.isEmpty(Saveuser)) {
-sendemail(Saveuser);
+sendemail(Saveuser,url);
 		return true;
 	}
 	return false;
@@ -57,14 +63,18 @@ sendemail(Saveuser);
 	}
 
 
-	private void sendemail(User saveuser) throws Exception {
+	private void sendemail(User saveuser,String url) throws Exception {
 		// TODO Auto-generated method stub
 		
-		String message="Hi,<b>"+saveuser.getFirstName()+"</b> "
+		String message="Hi,<b>[[username]]</b> "
 				+ "<br> Your account register successfully.<br>"
 				+ "<br> Click the below link verify your account <br>"
-				+ "<a href='#'>Click Here</a><br><br>"
+				+ "<a href='[[url]]'>Click Here</a><br><br>"
 				+ "Thanks,<br>Mail Send By Gourav The Java developer";
+		
+		message=message.replace("[[username]]", saveuser.getFirstName());
+		message=message.replace("[[url]]", url+"/api/v1/home/verify?uid="+saveuser.getId()+"&&code="+saveuser.getStatus().getVerificationCode());
+		
 		
 		EmailRequest emailRequest=EmailRequest
 				.builder()
