@@ -6,10 +6,17 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.springboot.enotes.Config.Security.CustomUserDetails;
 import com.springboot.enotes.Dto.EmailRequest;
+import com.springboot.enotes.Dto.LoginRequest;
+import com.springboot.enotes.Dto.LoginResponse;
 import com.springboot.enotes.Dto.UserDto;
 import com.springboot.enotes.Entity.AccountStatus;
 import com.springboot.enotes.Entity.Role;
@@ -41,7 +48,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private CustomValidation validation; 
 	
-
+	@Autowired
+private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	
 	@Override
 	public Boolean register(UserDto userDto,String url) throws Exception {
 
@@ -52,6 +65,7 @@ public class UserServiceImpl implements UserService {
 	setRole(userDto,user);
 	AccountStatus acstatus=AccountStatus.builder().isActive(false).verificationCode(UUID.randomUUID().toString()).build();
 	user.setStatus(acstatus);
+	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 	User Saveuser=userRepo.save(user);
 	if(!ObjectUtils.isEmpty(Saveuser)) {
 sendemail(Saveuser,url);
@@ -95,6 +109,28 @@ sendemail(Saveuser,url);
 	
 	
 		
+	}
+
+
+	@Override
+	public LoginResponse login(LoginRequest loginRequest) {
+ 
+		  Authentication authenticate = authenticationManager.authenticate
+				  (new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+	
+		  if(authenticate.isAuthenticated()) {
+			  System.out.println("hiii");
+			  CustomUserDetails userDetail=(CustomUserDetails) authenticate.getPrincipal();
+
+String token="hgvhdjvcbsjnvifnvinvkidnscianvoidsjhbslhvb";
+
+LoginResponse loginres=LoginResponse.builder()
+						.user(mapper.map(userDetail.getUser(), UserDto.class))
+						.token(token)
+						.build();
+return loginres;
+		  }
+		  return null;
 	}
 
 }

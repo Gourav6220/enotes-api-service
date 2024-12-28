@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.enotes.Dto.LoginRequest;
+import com.springboot.enotes.Dto.LoginResponse;
 import com.springboot.enotes.Dto.UserDto;
 import com.springboot.enotes.Service.UserService;
 import com.springboot.enotes.util.CommonUtil;
@@ -33,6 +36,17 @@ String url=CommonUtil.geturl(request);
 		}
 		return CommonUtil.createErrorResponseMessage("User Registeration Failed!!!", HttpStatus.INTERNAL_SERVER_ERROR);
 			
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+		
+	LoginResponse loginres=	userService.login(loginRequest);
+		if(!ObjectUtils.isEmpty(loginres)) {
+			return CommonUtil.createBuildResponse(loginres, HttpStatus.OK);
+		}
+		return CommonUtil.createErrorResponseMessage("Invalid Credenatials", HttpStatus.BAD_REQUEST);
+		
 	}
 	
 	
