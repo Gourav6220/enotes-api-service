@@ -23,6 +23,7 @@ import com.springboot.enotes.Entity.Role;
 import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Repository.RoleRepository;
 import com.springboot.enotes.Repository.UserRepository;
+import com.springboot.enotes.Service.JwtService;
 import com.springboot.enotes.Service.UserService;
 import com.springboot.enotes.util.CustomValidation;
 import com.springboot.enotes.util.EmailService;
@@ -53,6 +54,9 @@ private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JwtService jwtToken;
 	
 	
 	@Override
@@ -119,10 +123,9 @@ sendemail(Saveuser,url);
 				  (new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 	
 		  if(authenticate.isAuthenticated()) {
-			  System.out.println("hiii");
 			  CustomUserDetails userDetail=(CustomUserDetails) authenticate.getPrincipal();
 
-String token="hgvhdjvcbsjnvifnvinvkidnscianvoidsjhbslhvb";
+String token=jwtToken.generateToken(userDetail.getUser());
 
 LoginResponse loginres=LoginResponse.builder()
 						.user(mapper.map(userDetail.getUser(), UserDto.class))
