@@ -13,9 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.springboot.enotes.Entity.User;
+import com.springboot.enotes.Exception.JwtTokenExpiredException;
 import com.springboot.enotes.Service.JwtService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -46,7 +49,7 @@ public JwtServiceImpl(){
 		claims.put("status", user.getStatus().getIsActive());
 		String token = Jwts.builder().claims().add(claims).subject(user.getEmail())
 		.issuedAt(new Date(System.currentTimeMillis()))
-		.expiration(new Date(System.currentTimeMillis()+60*60*60*10))
+		.expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 10))
 		.and().signWith(getKey())
 		.compact();
 		
@@ -68,13 +71,22 @@ Claims claims=extractAllClaims(token);
 
 
 	private Claims extractAllClaims(String token) {
-
-		Claims claims = Jwts.parser()
-				.verifyWith(decryptKey(secretKey))
-				.build()
-				.parseSignedClaims(token)
-				.getPayload();
-		return claims;
+try {
+return	Jwts.parser()
+	.verifyWith(decryptKey(secretKey))
+	.build() 
+	.parseSignedClaims(token)
+	.getPayload();	
+}
+catch(ExpiredJwtException e) {
+	throw new JwtTokenExpiredException("Token is expired!!!");
+}
+catch(JwtException e) {
+	throw new JwtTokenExpiredException("invalid Jwt Token!!!");
+}
+catch(Exception ex) {
+	throw ex;
+}
 	}
 
 
@@ -95,7 +107,6 @@ byte[] decodekey = Decoders.BASE64.decode(secretKey2);
 		if(username.equalsIgnoreCase(userDetails.getUsername()) && !isExpried) {
 			return true;
 		}
-		
 		return false;
 	}
 
