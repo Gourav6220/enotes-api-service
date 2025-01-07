@@ -17,7 +17,7 @@ import com.springboot.enotes.Config.Security.CustomUserDetails;
 import com.springboot.enotes.Dto.EmailRequest;
 import com.springboot.enotes.Dto.LoginRequest;
 import com.springboot.enotes.Dto.LoginResponse;
-import com.springboot.enotes.Dto.UserDto;
+import com.springboot.enotes.Dto.UserRequest;
 import com.springboot.enotes.Entity.AccountStatus;
 import com.springboot.enotes.Entity.Role;
 import com.springboot.enotes.Entity.User;
@@ -60,7 +60,7 @@ private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
 	@Override
-	public Boolean register(UserDto userDto,String url) throws Exception {
+	public Boolean register(UserRequest userDto,String url) throws Exception {
 
 	validation.userValidation(userDto);
 		
@@ -105,7 +105,7 @@ sendemail(Saveuser,url);
 	}
 
 
-	private void setRole(UserDto userDto, User user) {
+	private void setRole(UserRequest userDto, User user) {
 		
 	List<Integer> reqRoleid= userDto.getRoles().stream().map(r->r.getId()).toList();	
 	List<Role> roles=roleRepo.findAllById(reqRoleid);
@@ -128,7 +128,7 @@ sendemail(Saveuser,url);
 String token=jwtToken.generateToken(userDetail.getUser());
 
 LoginResponse loginres=LoginResponse.builder()
-						.user(mapper.map(userDetail.getUser(), UserDto.class))
+						.user(mapper.map(userDetail.getUser(), UserRequest.class))
 						.token(token)
 						.build();
 return loginres;

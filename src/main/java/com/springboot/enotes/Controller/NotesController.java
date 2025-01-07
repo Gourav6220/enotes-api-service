@@ -25,6 +25,7 @@ import com.springboot.enotes.Dto.FavouriteNotesDto;
 import com.springboot.enotes.Dto.NotesDto;
 import com.springboot.enotes.Dto.NotesResponse;
 import com.springboot.enotes.Entity.FileDetails;
+import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Service.NotesSave;
 import com.springboot.enotes.util.CommonUtil;
 
@@ -36,7 +37,7 @@ public class NotesController {
 	private NotesSave notesSave;
 	
 	@PostMapping("/save-notes")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> saveNotes(@RequestParam String notes ,@RequestParam(required = false) MultipartFile file) throws Exception{
 
 		boolean savenotes=notesSave.saveNotes(notes,file);
@@ -91,8 +92,7 @@ public ResponseEntity<?> getAllNotes(){
 	)
 	{
 		
-		Integer userid=1;
-		NotesResponse notesDto=notesSave.getAllNotesByUser(userid,pageNo,pageSize);
+		NotesResponse notesDto=notesSave.getAllNotesByUser(pageNo,pageSize);
 			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
 	}
 	
@@ -115,8 +115,8 @@ public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception
 @PreAuthorize("hasRole('USER')")
 
 public ResponseEntity<?> getUserNotesRecycleBinNotes() throws Exception{
-	Integer userid=1;
-	List<NotesDto> notes=notesSave.getUserRecycleBinNotes(userid);
+
+	List<NotesDto> notes=notesSave.getUserRecycleBinNotes();
 if(CollectionUtils.isEmpty(notes)) {
 	return CommonUtil.createBuildResponseMessage("Notes Not Found In Recycle bin", HttpStatus.OK);	
 }
@@ -135,8 +135,7 @@ public ResponseEntity<?> hardDeleteNotesById(@PathVariable Integer id) throws Ex
 @PreAuthorize("hasRole('USER')")
 
 public ResponseEntity<?> emptyRecycleBin() {
-Integer userid=1;
-	notesSave.userEmptyRecyclebin(userid);
+notesSave.userEmptyRecyclebin();
  return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
 }
 
@@ -161,8 +160,7 @@ public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favno
 @PreAuthorize("hasRole('USER')")
 
 public ResponseEntity<?> getFavouritesnotesbyuser() {
-Integer userid=1;
-List<FavouriteNotesDto> favnoteslist=	notesSave.GetUserFavouriteNotes(userid);
+List<FavouriteNotesDto> favnoteslist=	notesSave.GetUserFavouriteNotes();
 if(!CollectionUtils.isEmpty(favnoteslist)) {
 	 return CommonUtil.createBuildResponse(favnoteslist, HttpStatus.OK);
 }

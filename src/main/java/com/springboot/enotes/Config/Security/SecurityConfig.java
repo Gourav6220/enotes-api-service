@@ -50,7 +50,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http.csrf(csrf-> csrf.disable())
-		.authorizeHttpRequests(req ->req.requestMatchers("/api/vi/user/**","/api/v1/home/**").permitAll()
+		.authorizeHttpRequests(req ->req.requestMatchers("/api/vi/auth/**","/api/v1/home/**").permitAll()
 		.anyRequest().authenticated())
 		.httpBasic(Customizer.withDefaults())
 		.sessionManagement(session->

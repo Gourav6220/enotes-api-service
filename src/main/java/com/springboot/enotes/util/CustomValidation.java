@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.TodoDto;
 import com.springboot.enotes.Dto.TodoDto.StatusDto;
-import com.springboot.enotes.Dto.UserDto;
+import com.springboot.enotes.Dto.UserRequest;
 import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Enums.TodoStatus;
 import com.springboot.enotes.Exception.ExistDataException;
@@ -101,7 +101,7 @@ private UserRepository userRepo;
 	}
 	}
 	
-	public void userValidation(UserDto userdto) {
+	public void userValidation(UserRequest userdto) {
 	
 
 		if(!StringUtils.hasText(userdto.getFirstName())) {

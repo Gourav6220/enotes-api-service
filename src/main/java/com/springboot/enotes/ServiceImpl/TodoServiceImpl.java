@@ -16,6 +16,7 @@ import com.springboot.enotes.Enums.TodoStatus;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Repository.TodoRepository;
 import com.springboot.enotes.Service.TodoService;
+import com.springboot.enotes.util.CommonUtil;
 import com.springboot.enotes.util.CustomValidation;
 
 @Service
@@ -70,7 +71,7 @@ public class TodoServiceImpl implements TodoService {
 
 	@Override
 	public List<TodoDto> getTodoByUser() {
-int userid=1;
+		int userid = CommonUtil.getLoggedInUser().getId();
 	
 	List<Todo> gettodolistuser=	todoRepo.findAllByCreatedBy(userid);	
 	List<TodoDto> gettodoDtolist=gettodolistuser.stream().map(todo->mapper.map(todo, TodoDto.class)).toList();

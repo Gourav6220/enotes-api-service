@@ -46,6 +46,7 @@ import com.springboot.enotes.Repository.FileRepository;
 import com.springboot.enotes.Repository.NotesRespository;
 import com.springboot.enotes.Dto.FavouriteNotesDto;
 import com.springboot.enotes.Service.NotesSave;
+import com.springboot.enotes.util.CommonUtil;
 
 @Service
 public class NotesSaveImpl implements NotesSave {
@@ -205,8 +206,9 @@ if(ObjectUtils.isEmpty(file)) {
 	}
 
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userid,Integer pageNo, Integer pageSize) {
-	
+	public NotesResponse getAllNotesByUser(Integer pageNo, Integer pageSize) {
+		Integer userid = CommonUtil.getLoggedInUser().getId();
+
 		Pageable pageable=PageRequest.of(pageNo, pageSize);
 		
 		Page<Notes> pagenotes=notesRespository.findByCreatedByAndIsDeletedFalse(userid,pageable);
@@ -249,8 +251,9 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 	}
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(Integer userid) {
-	
+	public List<NotesDto> getUserRecycleBinNotes() {
+		Integer userid = CommonUtil.getLoggedInUser().getId();
+
 		List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
 		
 		List<NotesDto> notesdto=getnotes.stream().map(note-> mapper.map(note, NotesDto.class)).toList();
@@ -270,8 +273,10 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 	}
 
 	@Override
-	public void userEmptyRecyclebin(Integer userid) {
-		List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
+	public void userEmptyRecyclebin() {
+		
+		int userid = CommonUtil.getLoggedInUser().getId();
+List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
 		if(!CollectionUtils.isEmpty(getnotes)) {
 			notesRespository.deleteAll(getnotes);
 		}
@@ -281,7 +286,8 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 
 	@Override
 	public void favouriteNotes(Integer notesid) throws Exception {
-	 int userid=1;
+		int userid = CommonUtil.getLoggedInUser().getId();
+
 		Notes note=	notesRespository.findById(notesid).orElseThrow(()-> new ResourceNotFoundException("Notes id not valid ! not found"));
 		FavouriteNote favouriteNote=FavouriteNote.builder()
 				.userId(userid)
@@ -299,8 +305,8 @@ Notes getnotes=notesRespository.findById(id).orElseThrow(()-> new ResourceNotFou
 	}
 
 	@Override
-	public List<FavouriteNotesDto> GetUserFavouriteNotes(Integer userId) {
-		 int userid=1;
+	public List<FavouriteNotesDto> GetUserFavouriteNotes() {
+		int userid = CommonUtil.getLoggedInUser().getId();
 		 List<FavouriteNote> favouriteNotes= favouriteNoteRepository.findByUserId(userid);
 		return favouriteNotes.stream().map(fn-> mapper.map(fn,FavouriteNotesDto.class)).toList();
 	

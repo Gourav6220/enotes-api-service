@@ -49,7 +49,7 @@ public JwtServiceImpl(){
 		claims.put("status", user.getStatus().getIsActive());
 		String token = Jwts.builder().claims().add(claims).subject(user.getEmail())
 		.issuedAt(new Date(System.currentTimeMillis()))
-		.expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 10))
+		.expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 60 *  10))
 		.and().signWith(getKey())
 		.compact();
 		
