@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.enotes.Dto.LoginRequest;
 import com.springboot.enotes.Dto.LoginResponse;
 import com.springboot.enotes.Dto.UserRequest;
-import com.springboot.enotes.Service.UserService;
+import com.springboot.enotes.Service.AuthService;
 import com.springboot.enotes.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,13 +22,13 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthController {
 
 	@Autowired
-	private UserService userService;
+	private AuthService authService;
 
 	
 	@PostMapping("/register-user")
 	public ResponseEntity<?> saveUserDetails(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception{
 String url=CommonUtil.geturl(request);
-		Boolean usersaveornot=userService.register(userDto,url);
+		Boolean usersaveornot=authService.register(userDto,url);
 		if(usersaveornot) {
 			return CommonUtil.createBuildResponseMessage("User Register Successfully", HttpStatus.CREATED);
 		}
@@ -38,7 +38,7 @@ String url=CommonUtil.geturl(request);
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-	LoginResponse loginres=	userService.login(loginRequest);
+	LoginResponse loginres=	authService.login(loginRequest);
 		if(!ObjectUtils.isEmpty(loginres)) {
 			return CommonUtil.createBuildResponse(loginres, HttpStatus.OK);
 		}

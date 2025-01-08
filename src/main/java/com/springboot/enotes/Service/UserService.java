@@ -1,15 +1,10 @@
 package com.springboot.enotes.Service;
 
-
-import com.springboot.enotes.Dto.LoginRequest;
-import com.springboot.enotes.Dto.LoginResponse;
-import com.springboot.enotes.Dto.UserRequest;
+import com.springboot.enotes.Dto.PasswordChangeRequest;
 
 public interface UserService {
 
-	public Boolean register(UserRequest userDto,String url) throws Exception;
-
-	public LoginResponse login(LoginRequest loginRequest);
+	public Boolean changePassword(PasswordChangeRequest passwordChangeRequest);
 	
 	
 }
