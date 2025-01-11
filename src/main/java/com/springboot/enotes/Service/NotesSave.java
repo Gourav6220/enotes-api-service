@@ -39,5 +39,9 @@ public interface NotesSave {
 	public List<FavouriteNotesDto> GetUserFavouriteNotes();
 
 	public boolean copyNotes(Integer notesId) throws Exception;
+
+	public NotesResponse getAllNoteBySearch(Integer pageNo, Integer pageSize,String keyword);
+
+	
 	
 }

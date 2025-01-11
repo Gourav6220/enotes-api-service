@@ -95,6 +95,17 @@ public ResponseEntity<?> getAllNotes(){
 		NotesResponse notesDto=notesSave.getAllNotesByUser(pageNo,pageSize);
 			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
 	}
+	@GetMapping("/search")
+	@PreAuthorize("hasRole('USER')")
+	
+	public ResponseEntity<?> getAllNotesBySearch(@RequestParam(name="key",defaultValue = "") String key,@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+			)
+	{
+		
+		NotesResponse notesDto=notesSave.getAllNoteBySearch(pageNo,pageSize,key);
+		return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+	}
 	
 @GetMapping("/delete/{id}")
 @PreAuthorize("hasRole('USER')")

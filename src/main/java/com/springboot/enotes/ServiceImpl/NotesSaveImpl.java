@@ -331,6 +331,32 @@ List<Notes> getnotes=notesRespository.findByCreatedByAndIsDeletedTrue(userid);
 		}
 		return false;
 	}
+
+	@Override
+	public NotesResponse getAllNoteBySearch(Integer pageNo, Integer pageSize,String keyword) {
+		Integer userid = CommonUtil.getLoggedInUser().getId();
+
+		Pageable pageable=PageRequest.of(pageNo, pageSize);
+		
+		Page<Notes> pagenotes=notesRespository.searchNotes(keyword,userid,pageable);
+		
+		List<NotesDto> notes=pagenotes.get().map(p->mapper.map(p, NotesDto.class)).toList();
+
+		
+		
+		NotesResponse noteresponse=NotesResponse.builder()
+				.notes(notes)
+				.pageNo(pagenotes.getNumber())
+				.pageSize(pagenotes.getSize())
+				.totalElement(pagenotes.getTotalElements())
+				.totalPages(pagenotes.getTotalPages())
+				.isFirst(pagenotes.isFirst())
+				.isLast(pagenotes.isLast())
+				.build();
+		
+		return noteresponse;
+
+	}
 	
 	
 	
