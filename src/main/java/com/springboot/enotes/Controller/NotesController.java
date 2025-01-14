@@ -1,0 +1,198 @@
+package com.springboot.enotes.Controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.springboot.enotes.Dto.FavouriteNotesDto;
+import com.springboot.enotes.Dto.NotesDto;
+import com.springboot.enotes.Dto.NotesResponse;
+import com.springboot.enotes.Entity.FileDetails;
+import com.springboot.enotes.Entity.User;
+import com.springboot.enotes.Service.NotesSave;
+import com.springboot.enotes.util.CommonUtil;
+
+@RestController
+@RequestMapping("/api/vi/notes")
+public class NotesController {
+
+	@Autowired
+	private NotesSave notesSave;
+	
+	@PostMapping("/save-notes")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> saveNotes(@RequestParam String notes ,@RequestParam(required = false) MultipartFile file) throws Exception{
+
+		boolean savenotes=notesSave.saveNotes(notes,file);
+		
+		if(savenotes) {
+			return CommonUtil.createBuildResponseMessage("Save Successfully", HttpStatus.CREATED);
+		}else {
+			return CommonUtil.createErrorResponseMessage("Not Saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	@GetMapping("/download/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
+		
+		FileDetails filedtls=notesSave.getfiledetails(id);
+		
+		byte[] data=notesSave.downloadFile(filedtls);
+
+		HttpHeaders headers=new HttpHeaders();
+	
+		String getfileextension=CommonUtil.getContenttype(filedtls.getOriginalFileName());
+		
+		headers.setContentType(MediaType.parseMediaType(getfileextension));
+		headers.setContentDispositionFormData("attachment", filedtls.getOriginalFileName());
+		
+		return ResponseEntity.ok().headers(headers).body(data);
+		
+	}
+	
+	@GetMapping("/")
+	@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<?> getAllNotes(){
+		
+		List<NotesDto> notesDto=notesSave.getAllNotes();
+		if(!CollectionUtils.isEmpty(notesDto)) {
+			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+		}else {
+			return  ResponseEntity.noContent().build();
+}
+		
+	}
+
+	
+	@GetMapping("/user-notes")
+	@PreAuthorize("hasRole('USER')")
+
+	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+	)
+	{
+		
+		NotesResponse notesDto=notesSave.getAllNotesByUser(pageNo,pageSize);
+			return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+	}
+	@GetMapping("/search")
+	@PreAuthorize("hasRole('USER')")
+	
+	public ResponseEntity<?> getAllNotesBySearch(@RequestParam(name="key",defaultValue = "") String key,@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+			)
+	{
+		
+		NotesResponse notesDto=notesSave.getAllNoteBySearch(pageNo,pageSize,key);
+		return CommonUtil.createBuildResponse(notesDto, HttpStatus.OK);
+	}
+	
+@GetMapping("/delete/{id}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> getDeleteNotesById(@PathVariable Integer id) throws Exception{
+ notesSave.deleteNotesByid(id);
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
+@GetMapping("/restore/{id}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
+	notesSave.restoreNotes(id);
+	return CommonUtil.createBuildResponseMessage("Notes restore Successfully", HttpStatus.OK);
+}
+	
+@GetMapping("/recycle-bin")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> getUserNotesRecycleBinNotes() throws Exception{
+
+	List<NotesDto> notes=notesSave.getUserRecycleBinNotes();
+if(CollectionUtils.isEmpty(notes)) {
+	return CommonUtil.createBuildResponseMessage("Notes Not Found In Recycle bin", HttpStatus.OK);	
+}
+	return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+}
+
+@DeleteMapping("/delete/{id}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> hardDeleteNotesById(@PathVariable Integer id) throws Exception{
+ notesSave.hardDeleteNotesByid(id);
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
+
+@DeleteMapping("/delete")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> emptyRecycleBin() {
+notesSave.userEmptyRecyclebin();
+ return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
+}
+
+@GetMapping("/fav/{notesId}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesId) throws Exception {
+	notesSave.favouriteNotes(notesId);
+	return CommonUtil.createBuildResponseMessage("Notes added favourite", HttpStatus.CREATED);
+}
+
+@GetMapping("/un-fav/{favnotesId}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favnotesId) throws Exception {
+	notesSave.unFavouriteNotes(favnotesId);
+	return CommonUtil.createBuildResponseMessage("Remove favourite", HttpStatus.OK);
+}
+
+
+@GetMapping("/fav-notes")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> getFavouritesnotesbyuser() {
+List<FavouriteNotesDto> favnoteslist=	notesSave.GetUserFavouriteNotes();
+if(!CollectionUtils.isEmpty(favnoteslist)) {
+	 return CommonUtil.createBuildResponse(favnoteslist, HttpStatus.OK);
+}
+return CommonUtil.createBuildResponseMessage("Favourite Notes Not Found", HttpStatus.NO_CONTENT);
+
+}
+
+@GetMapping("/copy-notes/{notesId}")
+@PreAuthorize("hasRole('USER')")
+
+public ResponseEntity<?> copynotesbyuser(@PathVariable Integer notesId) throws Exception {
+boolean notescopysave=notesSave.copyNotes(notesId);
+if(notescopysave) {
+	return CommonUtil.createBuildResponseMessage("Notes Copied successfully", HttpStatus.CREATED);
+}else {
+	return CommonUtil.createBuildResponseMessage("Notes Copied Failed", HttpStatus.INTERNAL_SERVER_ERROR);
+	
+}
+
+}
+
+
+
+}
