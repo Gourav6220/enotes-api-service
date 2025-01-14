@@ -1,0 +1,21 @@
+package com.springboot.enotes.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.springboot.enotes.Dto.CategoryDto;
+import com.springboot.enotes.Entity.Category;
+
+public interface CategoryRepository extends JpaRepository<Category,Integer > {
+
+	List<Category> findByIsActiveTrueAndIsDeletedFalse();
+
+	Optional<Category> findByIdAndIsDeletedFalse(Integer id);
+
+	List<Category> findByIsDeletedFalse();
+
+	Category findByName(String name);
+
+}
