@@ -16,7 +16,9 @@ import com.springboot.enotes.Service.AuthService;
 import com.springboot.enotes.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/vi/auth")
 public class AuthController {
@@ -27,11 +29,14 @@ public class AuthController {
 	
 	@PostMapping("/register-user")
 	public ResponseEntity<?> saveUserDetails(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception{
-String url=CommonUtil.geturl(request);
+ log.info("AuthController : saveUserDetails : Exceution Start");
+		String url=CommonUtil.geturl(request);
 		Boolean usersaveornot=authService.register(userDto,url);
 		if(usersaveornot) {
+			 log.info("Message : {} ","User Successfully Register ");
 			return CommonUtil.createBuildResponseMessage("User Register Successfully", HttpStatus.CREATED);
 		}
+		 log.info("Message : {} ","User Registeration Failed!");
 		return CommonUtil.createErrorResponseMessage("User Registeration Failed!!!", HttpStatus.INTERNAL_SERVER_ERROR);
 			
 	}

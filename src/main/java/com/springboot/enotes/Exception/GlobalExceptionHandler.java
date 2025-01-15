@@ -17,53 +17,56 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.springboot.enotes.util.CommonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+		log.info("GlobalExceptionHandler: handleException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+		log.info("GlobalExceptionHandler: handleAccessDeniedException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.FORBIDDEN);
 	}
 //	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		log.info("GlobalExceptionHandler: handleNullPointerException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ExceptionHandler(ValidException.class)
 	public ResponseEntity<?> handleValidException(ValidException ex){
-//		return new ResponseEntity<>(ex.getError(),HttpStatus.BAD_REQUEST);
+		log.info("GlobalExceptionHandler: handleValidException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponse(ex.getError(), HttpStatus.BAD_REQUEST);
 
 	}
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+		log.info("GlobalExceptionHandler: handleResourceNotFoundException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		log.info("GlobalExceptionHandler: handleIllegalArgumentException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		log.info("GlobalExceptionHandler: handleExistDataException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException ex){
-//		return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		log.info("GlobalExceptionHandler: handleFileNotFoundException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
@@ -79,16 +82,20 @@ public class GlobalExceptionHandler {
 		});
 		
 		
-//		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+		log.info("GlobalExceptionHandler: handleMethodArgumentNotValidException() : {}",ex.getMessage());
 		return CommonUtil.createErrorResponse(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(SuccessException.class)
 	public ResponseEntity<?> handleSuccessException(SuccessException ex){
+		log.info("GlobalExceptionHandler: handleSuccessException() : {}",ex.getMessage());
+
 		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex){
+		log.info("GlobalExceptionHandler: handleBadCredentialsException() : {}",ex.getMessage());
+
 		return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
