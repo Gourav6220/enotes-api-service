@@ -24,7 +24,9 @@ import com.springboot.enotes.Service.CategorySave;
 import com.springboot.enotes.util.CommonUtil;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/vi/category")
 public class CategoryController {
@@ -50,12 +52,13 @@ public class CategoryController {
 	@GetMapping("/")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getAllCategory(){
-		
+log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 		List<CategoryDto> allcategory=categorySave.getAllCategory();
 	if(CollectionUtils.isEmpty(allcategory)) {
+		log.info("CategoryController: getAllCategory(): {}","Exceution End");
 		return  ResponseEntity.noContent().build();
 	}else {
-//		return new ResponseEntity<>(allcategory,HttpStatus.OK);
+		log.info("CategoryController: getAllCategory(): {}","Exceution End");
 		return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
 		}
 	
@@ -63,14 +66,15 @@ public class CategoryController {
 	@GetMapping("/active")
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	public ResponseEntity<?> getAllActiveCategory(){
-		
+		log.info("CategoryController: getAllActiveCategory(): {}","Exceution Start");
+
 		List<CategoryResponse> allcategory=categorySave.getActiveCategory();
 
 		if(CollectionUtils.isEmpty(allcategory)) {
 			return  ResponseEntity.noContent().build();
 		}else {
-//			return new ResponseEntity<>(allcategory,HttpStatus.OK);
-			return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
+			log.info("CategoryController: getAllActiveCategory(): {}","Exceution End");
+       return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
 
 		}
 		
