@@ -5,38 +5,31 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.CategoryResponse;
-import com.springboot.enotes.Entity.Category;
-import com.springboot.enotes.Exception.ResourceNotFoundException;
+import com.springboot.enotes.Endpoints.CategoryControllerEndpoints;
 import com.springboot.enotes.Service.CategorySave;
 import com.springboot.enotes.util.CommonUtil;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/vi/category")
-public class CategoryController {
+public class CategoryController implements CategoryControllerEndpoints{
 
 	@Autowired
 	private CategorySave categorySave;
 	
-	@PostMapping("/save-category")
-	@PreAuthorize("hasRole('ADMIN')")
-//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category){
+
+	//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category){
+	@Override
 		public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category){
 	Boolean saveCategory=categorySave.saveCategory(category);
 	if(saveCategory) {
@@ -49,8 +42,9 @@ public class CategoryController {
 		
 	}
 	}
-	@GetMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
+
+
+	@Override
 	public ResponseEntity<?> getAllCategory(){
 log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 		List<CategoryDto> allcategory=categorySave.getAllCategory();
@@ -63,8 +57,9 @@ log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 		}
 	
 	}
-	@GetMapping("/active")
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+
+	
+	@Override
 	public ResponseEntity<?> getAllActiveCategory(){
 		log.info("CategoryController: getAllActiveCategory(): {}","Exceution Start");
 
@@ -79,10 +74,11 @@ log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 		}
 		
 	}
-	@GetMapping("{id}")
-	@PreAuthorize("hasRole('ADMIN')")
 
-	public ResponseEntity<?> getCategorybyid(@PathVariable Integer id) throws Exception{
+	
+	
+	@Override
+public ResponseEntity<?> getCategorybyid(@PathVariable Integer id) throws Exception{
 		CategoryDto categorydro=categorySave.getCategoryByid(id);
 		
 		if(ObjectUtils.isEmpty(categorydro)) {
@@ -96,10 +92,10 @@ log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 		}
 	}
 	
-	@DeleteMapping("{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-
-	public ResponseEntity<?> getCategorydelete(@PathVariable Integer id){
+	
+	
+	@Override
+public ResponseEntity<?> getCategorydelete(@PathVariable Integer id){
 		Boolean categorydelete=categorySave.deleteCategoryByid(id);
 		
 		if(categorydelete) {
