@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.enotes.Dto.PasswordChangeRequest;
 import com.springboot.enotes.Dto.UserResponse;
+import com.springboot.enotes.Endpoints.UserControllerEndpoints;
 import com.springboot.enotes.Entity.User;
 import com.springboot.enotes.Service.UserService;
 import com.springboot.enotes.util.CommonUtil;
 
 
 @RestController
-@RequestMapping("/api/vi/user")
-
-public class UserController {
+public class UserController implements UserControllerEndpoints {
 
 	@Autowired
 	private ModelMapper mapper;
@@ -28,7 +27,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/profile")
+	@Override
 	public ResponseEntity<?> getProfile(){
 		
 		User loggedInUser = CommonUtil.getLoggedInUser();
@@ -37,7 +36,8 @@ public class UserController {
 		return CommonUtil.createBuildResponse(user, HttpStatus.OK);
 	}
 	
-	@PostMapping("/change-password")
+
+	@Override
 	public ResponseEntity<?> savePasswordChange(@RequestBody PasswordChangeRequest passwordChangeRequest){
 		
 		Boolean userPasswordChange=userService.changePassword(passwordChangeRequest) ;
