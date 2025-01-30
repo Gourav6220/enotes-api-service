@@ -1,2 +1,0 @@
-2025-18-17 20:17:16.943 INFO  [http-nio-8080-exec-4] c.s.e.Controller.CategoryController - CategoryController: getAllActiveCategory(): Exceution Start
-2025-18-17 20:17:16.964 INFO  [http-nio-8080-exec-4] c.s.e.Controller.CategoryController - CategoryController: getAllActiveCategory(): Exceution End

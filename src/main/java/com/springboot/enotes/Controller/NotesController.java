@@ -38,7 +38,7 @@ public class NotesController implements NotesControllerEndpoints {
 	
 
 	@Override
-public ResponseEntity<?> saveNotes(@RequestParam String notes ,@RequestParam(required = false) MultipartFile file) throws Exception{
+public ResponseEntity<?> saveNotes(String notes,MultipartFile file) throws Exception{
 	boolean savenotes=notesSave.saveNotes(notes,file);
 		if(savenotes) {
 			return CommonUtil.createBuildResponseMessage("Save Successfully", HttpStatus.CREATED);
@@ -50,7 +50,7 @@ public ResponseEntity<?> saveNotes(@RequestParam String notes ,@RequestParam(req
 	
 	
 	@Override
-public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> downloadFile(Integer id) throws Exception{
 		
 		FileDetails filedtls=notesSave.getfiledetails(id);
 		
@@ -81,9 +81,7 @@ public ResponseEntity<?> getAllNotes(){
 
 	
 	@Override
-public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
-	)
+public ResponseEntity<?> getAllNotesByUser(Integer pageNo,Integer pageSize)
 	{
 		
 		NotesResponse notesDto=notesSave.getAllNotesByUser(pageNo,pageSize);
@@ -92,9 +90,7 @@ public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultVa
 	
 	
 	@Override
-	public ResponseEntity<?> getAllNotesBySearch(@RequestParam(name="key",defaultValue = "") String key,@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
-			)
+	public ResponseEntity<?> getAllNotesBySearch(String key,Integer pageNo,Integer pageSize)
 	{
 		
 		NotesResponse notesDto=notesSave.getAllNoteBySearch(pageNo,pageSize,key);
@@ -102,7 +98,7 @@ public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultVa
 	}
 	
 	@Override
-public ResponseEntity<?> getDeleteNotesById(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> getDeleteNotesById(Integer id) throws Exception{
  notesSave.deleteNotesByid(id);
  return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
 }
@@ -110,7 +106,7 @@ public ResponseEntity<?> getDeleteNotesById(@PathVariable Integer id) throws Exc
 
 
 	@Override
-public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> restoreNotes(Integer id) throws Exception{
 	notesSave.restoreNotes(id);
 	return CommonUtil.createBuildResponseMessage("Notes restore Successfully", HttpStatus.OK);
 }
@@ -129,7 +125,7 @@ if(CollectionUtils.isEmpty(notes)) {
 
 
 	@Override
-public ResponseEntity<?> hardDeleteNotesById(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> hardDeleteNotesById(Integer id) throws Exception{
  notesSave.hardDeleteNotesByid(id);
  return CommonUtil.createBuildResponseMessage("Notes Delete Successfully", HttpStatus.OK);
 }
@@ -145,7 +141,7 @@ notesSave.userEmptyRecyclebin();
 
 
 	@Override
-public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesId) throws Exception {
+public ResponseEntity<?> markfavouritesnotesbyuser(Integer notesId) throws Exception {
 	notesSave.favouriteNotes(notesId);
 	return CommonUtil.createBuildResponseMessage("Notes added favourite", HttpStatus.CREATED);
 }
@@ -153,7 +149,7 @@ public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesId
 
 
 	@Override
-public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favnotesId) throws Exception {
+public ResponseEntity<?> markUnfavouritesnotesbyuser(Integer favnotesId) throws Exception {
 	notesSave.unFavouriteNotes(favnotesId);
 	return CommonUtil.createBuildResponseMessage("Remove favourite", HttpStatus.OK);
 }
@@ -172,7 +168,7 @@ return CommonUtil.createBuildResponseMessage("Favourite Notes Not Found", HttpSt
 
 
 	@Override
-public ResponseEntity<?> copynotesbyuser(@PathVariable Integer notesId) throws Exception {
+public ResponseEntity<?> copynotesbyuser(Integer notesId) throws Exception {
 boolean notescopysave=notesSave.copyNotes(notesId);
 if(notescopysave) {
 	return CommonUtil.createBuildResponseMessage("Notes Copied successfully", HttpStatus.CREATED);

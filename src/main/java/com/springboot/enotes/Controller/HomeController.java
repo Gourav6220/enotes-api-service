@@ -31,7 +31,7 @@ public class HomeController implements HomeControllerEndpoints {
 	
 	
 	@Override
-public ResponseEntity<?> verifiedNewuser(@RequestParam Integer uid,@RequestParam String code) throws Exception{
+public ResponseEntity<?> verifiedNewuser(Integer uid,String code) throws Exception{
 
 		Boolean verify=homeService.verifyAccount(uid, code);
 		if(verify) {
@@ -43,14 +43,14 @@ return CommonUtil.createErrorResponseMessage("Invalid Verification", HttpStatus.
 	
 	
 	@Override
-public ResponseEntity<?> sendEmailPasswordReset(@RequestParam String email,HttpServletRequest Request) throws Exception {
+public ResponseEntity<?> sendEmailPasswordReset(String email,HttpServletRequest Request) throws Exception {
 		userService.sendEmailPasswordReset(email,Request);
 return CommonUtil.createBuildResponseMessage("Email Send Success!! Check Email Reset Password", HttpStatus.OK);
 	}
 
 
 	@Override
-	public ResponseEntity<?> verifyPasswordResetLink(@RequestParam Integer uid,@RequestParam String code) throws Exception{
+	public ResponseEntity<?> verifyPasswordResetLink(Integer uid,String code) throws Exception{
 		
 		Boolean verify=userService.verifyResetPassword(uid,code);
 		if(verify) {
@@ -60,7 +60,7 @@ return CommonUtil.createBuildResponseMessage("Email Send Success!! Check Email R
 	}
 
 	@Override
-public ResponseEntity<?> resetPassword(@RequestBody PswdResetRequest pswdResetRequest) throws Exception{
+public ResponseEntity<?> resetPassword(PswdResetRequest pswdResetRequest) throws Exception{
 		userService.resetPassword(pswdResetRequest);
 		return CommonUtil.createBuildResponseMessage("Password Reset Success", HttpStatus.OK);
 	}

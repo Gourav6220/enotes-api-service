@@ -27,7 +27,7 @@ public class AuthController implements  AuthControllerEndpoints {
 	private AuthService authService;
 
 	@Override
-	public ResponseEntity<?> saveUserDetails(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception{
+	public ResponseEntity<?> saveUserDetails(UserRequest userDto,HttpServletRequest request) throws Exception{
 		 log.info("AuthController : saveUserDetails : Exceution Start");
 				String url=CommonUtil.geturl(request);
 				Boolean usersaveornot=authService.register(userDto,url);
@@ -41,7 +41,7 @@ public class AuthController implements  AuthControllerEndpoints {
 			}
 	
 	@Override
-public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+public ResponseEntity<?> login(LoginRequest loginRequest){
 			LoginResponse loginres=	authService.login(loginRequest);
 				if(!ObjectUtils.isEmpty(loginres)) {
 					return CommonUtil.createBuildResponse(loginres, HttpStatus.OK);

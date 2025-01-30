@@ -38,7 +38,7 @@ public class UserController implements UserControllerEndpoints {
 	
 
 	@Override
-	public ResponseEntity<?> savePasswordChange(@RequestBody PasswordChangeRequest passwordChangeRequest){
+	public ResponseEntity<?> savePasswordChange(PasswordChangeRequest passwordChangeRequest){
 		
 		Boolean userPasswordChange=userService.changePassword(passwordChangeRequest) ;
 		if(userPasswordChange) {

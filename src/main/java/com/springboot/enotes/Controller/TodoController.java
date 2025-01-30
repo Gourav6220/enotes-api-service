@@ -27,7 +27,7 @@ public class TodoController implements TodoControllerEndpoints {
 	private TodoService todoService;
 	
 @Override
-public ResponseEntity<?> saveTododata(@RequestBody TodoDto todo) throws Exception{
+public ResponseEntity<?> saveTododata(TodoDto todo) throws Exception{
 		
 		boolean savetodo=todoService.saveTodo(todo);
 		if(savetodo) {
@@ -49,7 +49,7 @@ public ResponseEntity<?> saveTododata(@RequestBody TodoDto todo) throws Exceptio
 	
 
 @Override
-	public ResponseEntity<?> getTodoByid(@PathVariable Integer todoid) throws Exception{
+	public ResponseEntity<?> getTodoByid(Integer todoid) throws Exception{
 		TodoDto gettododetail=todoService.getTodoByid(todoid);
 		if(!ObjectUtils.isEmpty(gettododetail)) {
 			return CommonUtil.createBuildResponse(gettododetail, HttpStatus.OK);

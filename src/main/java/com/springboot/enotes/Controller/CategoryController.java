@@ -30,7 +30,7 @@ public class CategoryController implements CategoryControllerEndpoints{
 
 	//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category){
 	@Override
-		public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category){
+		public ResponseEntity<?> saveCategory(CategoryDto category){
 	Boolean saveCategory=categorySave.saveCategory(category);
 	if(saveCategory) {
 		return CommonUtil.createBuildResponseMessage("SuccessFully Saved", HttpStatus.CREATED);
@@ -78,7 +78,7 @@ log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 	
 	
 	@Override
-public ResponseEntity<?> getCategorybyid(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> getCategorybyid(Integer id) throws Exception{
 		CategoryDto categorydro=categorySave.getCategoryByid(id);
 		
 		if(ObjectUtils.isEmpty(categorydro)) {
@@ -95,7 +95,7 @@ public ResponseEntity<?> getCategorybyid(@PathVariable Integer id) throws Except
 	
 	
 	@Override
-public ResponseEntity<?> getCategorydelete(@PathVariable Integer id){
+public ResponseEntity<?> getCategorydelete(Integer id){
 		Boolean categorydelete=categorySave.deleteCategoryByid(id);
 		
 		if(categorydelete) {

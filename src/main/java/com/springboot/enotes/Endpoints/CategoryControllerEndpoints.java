@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static com.springboot.enotes.util.Constants.ROLE_USER;
+import static com.springboot.enotes.util.Constants.ROLE_ADMIN;
+import static com.springboot.enotes.util.Constants.ROLE_ADMIN_USER;
 
 import com.springboot.enotes.Dto.CategoryDto;
 
@@ -15,27 +18,27 @@ import com.springboot.enotes.Dto.CategoryDto;
 public interface CategoryControllerEndpoints {
 
 	@PostMapping("/save-category")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category);
 	
 	
 	@GetMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> getAllCategory();
 	
 	
 	@GetMapping("/active")
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize(ROLE_ADMIN_USER)
 	public ResponseEntity<?> getAllActiveCategory();
 
 
 	@GetMapping("{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> getCategorybyid(@PathVariable Integer id) throws Exception;
 	
 	
 	@DeleteMapping("{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(ROLE_ADMIN)
 	public ResponseEntity<?> getCategorydelete(@PathVariable Integer id);
 
 

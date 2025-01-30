@@ -10,80 +10,87 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.springboot.enotes.util.Constants.ROLE_USER;
+import static com.springboot.enotes.util.Constants.ROLE_ADMIN;
+import static com.springboot.enotes.util.Constants.ROLE_ADMIN_USER;
+import static com.springboot.enotes.util.Constants.DEFAULT_PAGE_NO;
+import static com.springboot.enotes.util.Constants.DEFAULT_PAGE_SIZE;
+
+
 @RequestMapping("/api/vi/notes")
 public interface NotesControllerEndpoints {
 
 	@PostMapping("/save-notes")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> saveNotes(@RequestParam String notes ,@RequestParam(required = false) MultipartFile file) throws Exception;
 
 	
 	@GetMapping("/download/{id}")
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize(ROLE_ADMIN_USER)
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception;
 		
 	
 	@GetMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(ROLE_ADMIN)
     public ResponseEntity<?> getAllNotes();
 
 	
 	@GetMapping("/user-notes")
-	@PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+	@PreAuthorize(ROLE_USER)
+    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue = DEFAULT_PAGE_NO) Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize
 	);
 
 	
 	@GetMapping("/search")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getAllNotesBySearch(@RequestParam(name="key",defaultValue = "") String key,@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-			@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize
+	@PreAuthorize(ROLE_USER)
+	public ResponseEntity<?> getAllNotesBySearch(@RequestParam(name="key",defaultValue = "") String key,@RequestParam(name="pageNo",defaultValue = DEFAULT_PAGE_NO) Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize
 			);
 
 	
 	@GetMapping("/delete/{id}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getDeleteNotesById(@PathVariable Integer id) throws Exception;
 
 	
 	@GetMapping("/restore/{id}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception;
 
 	
 	@GetMapping("/recycle-bin")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getUserNotesRecycleBinNotes() throws Exception;
 
 	
 	@DeleteMapping("/delete/{id}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> hardDeleteNotesById(@PathVariable Integer id) throws Exception;
 	
 	
 	@DeleteMapping("/delete")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> emptyRecycleBin();
 
 
 	@GetMapping("/fav/{notesId}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> markfavouritesnotesbyuser(@PathVariable Integer notesId) throws Exception;
 
 
 	@GetMapping("/un-fav/{favnotesId}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> markUnfavouritesnotesbyuser(@PathVariable Integer favnotesId) throws Exception;
 
 		
 	@GetMapping("/fav-notes")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getFavouritesnotesbyuser();
 
 	
 	@GetMapping("/copy-notes/{notesId}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> copynotesbyuser(@PathVariable Integer notesId) throws Exception;
 
 	
