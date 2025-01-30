@@ -2,7 +2,7 @@ spring:
   application:
     name: Enotes_API_Service
   profiles:
-    active: dev
+    active: prod
     
 --- 
 #Dev Config
@@ -36,10 +36,19 @@ spring:
           auth: true
         starttls:
           enable: true 
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: "/enotes-doc"
+  api-docs:
+    path: "/enotes-api-doc"  
+server:
+  port: 8080
 file:
   upload:
     path: notes/
-
 
 
 ---
@@ -75,6 +84,16 @@ spring:
           auth: true
         starttls:
           enable: true 
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: "/enotes-doc"
+  api-docs:
+    path: "/enotes-api-doc"  
+server:
+  port: 8081
+          
 file:
   upload:
     path: notes/
@@ -113,6 +132,14 @@ spring:
           auth: true
         starttls:
           enable: true 
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: "/enotes-doc"
+  api-docs:
+    path: "/enotes-api-doc"  
+          
 file:
   upload:
     path: notes/    
@@ -151,6 +178,16 @@ spring:
           auth: true
         starttls:
           enable: true 
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: "/enotes-doc"
+  api-docs:
+    path: "/enotes-api-doc"  
+server:
+  port: 8082
+          
 file:
   upload:
     path: notes/    
