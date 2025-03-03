@@ -2,7 +2,7 @@ spring:
   application:
     name: Enotes_API_Service
   profiles:
-    active: prod
+    active: dev
     
 --- 
 #Dev Config
@@ -46,6 +46,16 @@ springdoc:
     path: "/enotes-api-doc"  
 server:
   port: 8080
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        exclude: loggers,beans
+  endpoint:
+    shutdown:
+      enabled: true     
 file:
   upload:
     path: notes/
