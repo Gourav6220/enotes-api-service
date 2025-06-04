@@ -46,7 +46,7 @@ public interface CategoryControllerEndpoints {
 	
 	@Operation(summary = "Delete Category",tags = {"Category"},description = "Only Admin Delete Catgeory Details by id")
 	@DeleteMapping("{id}")
-	@PreAuthorize(ROLE_ADMIN)
+	@PreAuthorize(ROLE_ADMIN) 
 	public ResponseEntity<?> getCategorydelete(@PathVariable Integer id);
 
 

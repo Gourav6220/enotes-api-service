@@ -1,8 +1,12 @@
 package com.springboot.enotes.Controller;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.CategoryResponse;
 import com.springboot.enotes.Endpoints.CategoryControllerEndpoints;
+import com.springboot.enotes.Entity.Category;
+import com.springboot.enotes.Repository.CategoryRepository;
+import com.springboot.enotes.Service.CacheManagerService;
 import com.springboot.enotes.Service.CategorySave;
 import com.springboot.enotes.util.CommonUtil;
 
@@ -25,7 +32,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryController implements CategoryControllerEndpoints{
 
 	@Autowired
+	private ModelMapper mapper;
+
+	@Autowired
 	private CategorySave categorySave;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	
+	@Autowired
+	private CacheManagerService cacheManagerService;
 	
 
 	//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category){
@@ -45,21 +62,27 @@ public class CategoryController implements CategoryControllerEndpoints{
 
 
 	@Override
+	@Cacheable("allCategory")
 	public ResponseEntity<?> getAllCategory(){
 log.info("CategoryController: getAllCategory(): {}","Exceution Start");
-		List<CategoryDto> allcategory=categorySave.getAllCategory();
+		
+List<Category> allcategory=categoryRepository.findByIsDeletedFalse();
+		
+List<CategoryDto> list = allcategory.stream().map(cat-> mapper.map(cat,CategoryDto.class)).toList();
+
 	if(CollectionUtils.isEmpty(allcategory)) {
 		log.info("CategoryController: getAllCategory(): {}","Exceution End");
 		return  ResponseEntity.noContent().build();
 	}else {
 		log.info("CategoryController: getAllCategory(): {}","Exceution End");
-		return CommonUtil.createBuildResponse(allcategory, HttpStatus.OK);
+		return CommonUtil.createBuildResponse(list, HttpStatus.OK);
 		}
 	
 	}
 
 	
 	@Override
+	@Cacheable("activeCategory")
 	public ResponseEntity<?> getAllActiveCategory(){
 		log.info("CategoryController: getAllActiveCategory(): {}","Exceution Start");
 
@@ -78,6 +101,7 @@ log.info("CategoryController: getAllCategory(): {}","Exceution Start");
 	
 	
 	@Override
+	@Cacheable( value = "getCategoryByid",key = "#id")
 public ResponseEntity<?> getCategorybyid(Integer id) throws Exception{
 		CategoryDto categorydro=categorySave.getCategoryByid(id);
 		
@@ -95,10 +119,12 @@ public ResponseEntity<?> getCategorybyid(Integer id) throws Exception{
 	
 	
 	@Override
+	@CacheEvict( value = "getCategoryByid",key = "#id")
 public ResponseEntity<?> getCategorydelete(Integer id){
 		Boolean categorydelete=categorySave.deleteCategoryByid(id);
 		
 		if(categorydelete) {
+			cacheManagerService.removeAllCachebyName(Arrays.asList("activeCategory","allCategory"));
 //			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 			return CommonUtil.createBuildResponseMessage("Deleted Successfully", HttpStatus.OK);
 

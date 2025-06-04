@@ -52,7 +52,8 @@ public class SecurityConfig {
 		http.csrf(csrf-> csrf.disable())
 		.authorizeHttpRequests(req ->req.requestMatchers("/api/vi/auth/**","/api/v1/home/**","/swagger-ui/**","/v3/api-docs/**"
 				,"/enotes-doc/**","/enotes-api-doc/**",
-				"/actuator/**").permitAll()
+				"/actuator/**"
+				,"/enotes-doc/**","/enotes-api-doc/**","/api/vi/cache/**").permitAll()
 		.anyRequest().authenticated())
 		.httpBasic(Customizer.withDefaults())
 		.sessionManagement(session->
