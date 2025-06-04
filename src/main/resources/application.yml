@@ -2,7 +2,7 @@ spring:
   application:
     name: Enotes_API_Service
   profiles:
-    active: prod
+    active: dev
     
 --- 
 #Dev Config
@@ -19,6 +19,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
     hibernate:
       ddl-auto: none
   servlet:
