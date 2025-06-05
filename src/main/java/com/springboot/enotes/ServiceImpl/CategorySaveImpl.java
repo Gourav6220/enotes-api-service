@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.springboot.enotes.Dto.CategoryDto;
 import com.springboot.enotes.Dto.CategoryResponse;
 import com.springboot.enotes.Entity.Category;
+import com.springboot.enotes.Exception.ExistDataException;
 import com.springboot.enotes.Exception.ResourceNotFoundException;
 import com.springboot.enotes.Repository.CategoryRepository;
 import com.springboot.enotes.Service.CategorySave;
@@ -36,36 +37,27 @@ public class CategorySaveImpl implements CategorySave {
 // validation checking
 		customValidation.categoryValidation(categoryDto);
 		
+		boolean namefound=categoryRepository.existsByName(categoryDto.getName());
+
+		if(namefound) {
+			throw new ExistDataException("Category Name Exist In our database");
+		}
 		
 		Category category=mapper.map(categoryDto, Category.class);
 		
 		if(ObjectUtils.isEmpty(category.getId())) {
-			Category namefound=categoryRepository.findByName(category.getName());
-
-			if(!ObjectUtils.isEmpty(namefound)) {
-				throw new IllegalArgumentException("Category Name Exist In our database");
-			}else {
 				category.setIsDeleted(false);
-//				category.setCreatedBy(1);
-//				category.setCreatedOn(new Date());
-				Category c=categoryRepository.save(category);
-				if(ObjectUtils.isEmpty(c)) {
-					return false;
-					
-				}
-
-			}
-			
-				
+				category.setCreatedOn(new Date());
 		}else {
 			updateCategory(category);
-			Category c=categoryRepository.save(category);
-			if(ObjectUtils.isEmpty(c)) {
-				return false;
-				
-			}
 		}
 
+		
+		Category c=categoryRepository.save(category);
+		if(ObjectUtils.isEmpty(c)) {
+			return false;
+			
+		}
 		return true;
 	}
 
